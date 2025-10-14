@@ -1,19 +1,18 @@
 <?php
 
+use App\Http\Controllers\AirportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+Route::get('/airports', [AirportController::class, 'index']);
+Route::get('/airports/{airport}', [AirportController::class, 'show']);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::prefix('admin')->group(function () {
+        // Airports
+        Route::post('/airports', [AirportController::class, 'store']);
+        Route::put('/airports/{airport}', [AirportController::class, 'update']);
+        Route::delete('/airports/{airport}', [AirportController::class, 'destroy']);
+
+       
 });
