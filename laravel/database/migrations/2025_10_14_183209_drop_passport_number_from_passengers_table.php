@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void {
         Schema::table('passengers', function (Blueprint $table) {
-            $table->dropColumn('passport_number');
+            $table->dropColumn('passenger_number');
         });
     }
     public function down(): void {
         Schema::table('passengers', function (Blueprint $table) {
-            $table->string('passport_number', 32)->nullable();
+            $table->string('passenger_number', 32)->nullable();
         });
     }
 };

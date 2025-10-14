@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->string('last_name');
             $table->date('date_of_birth')->nullable();
             $table->string('passport_number', 32)->nullable();
+             $table->string('passenger_number', 32)->nullable();
             $table->string('seat')->nullable(); 
             $table->decimal('price', 10, 2)->default(0);
             $table->timestamps();
