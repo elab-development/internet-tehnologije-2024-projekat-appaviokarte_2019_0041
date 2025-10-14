@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AirportController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FlightController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,4 +20,10 @@ Route::prefix('admin')->group(function () {
         Route::post('/flights', [FlightController::class, 'store']);
         Route::put('/flights/{flight}', [FlightController::class, 'update']);
         Route::delete('/flights/{flight}', [FlightController::class, 'destroy']);
+
+
+         Route::apiResource('bookings', BookingController::class);
+
+        // akcija mimo REST-a
+        Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
 });
