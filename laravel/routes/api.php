@@ -4,6 +4,7 @@ use App\Http\Controllers\AirportController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FlightController;
+use App\Http\Controllers\PassengerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -36,4 +37,15 @@ Route::post('/login',    [AuthController::class, 'login'])->name('auth.login');
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/me',           [AuthController::class, 'me'])->name('auth.me');
     Route::post('/logout',      [AuthController::class, 'logout'])->name('auth.logout'); 
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    // nested listing/kreiranje (vezano za konkretan booking)
+    Route::apiResource('bookings.passengers', PassengerController::class)
+        ->only(['index','store'])
+        ->shallow(); // -> /passengers/{passenger} za show/update/destroy
+
+    // pojedinačni putnik (show/update/destroy)
+    Route::apiResource('passengers', PassengerController::class)
+        ->only(['show','update','destroy']);
 });
