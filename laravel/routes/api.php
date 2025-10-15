@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AirportController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FlightController;
 use Illuminate\Http\Request;
@@ -26,4 +27,13 @@ Route::prefix('admin')->group(function () {
 
         // akcija mimo REST-a
         Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+});
+
+
+Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+Route::post('/login',    [AuthController::class, 'login'])->name('auth.login');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me',           [AuthController::class, 'me'])->name('auth.me');
+    Route::post('/logout',      [AuthController::class, 'logout'])->name('auth.logout'); 
 });
