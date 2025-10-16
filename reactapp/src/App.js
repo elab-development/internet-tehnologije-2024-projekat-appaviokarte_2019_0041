@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import FlightsPage from "./pages/FlightsPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import AdminFlightsPage from "./pages/AdminFlightsPage";
+import AdminAirportsPage from "./pages/AdminAirportsPage";
 
  
 
@@ -43,6 +44,7 @@ export default function App() {
 
 
         <Route path="/admin/flights" element={<AdminFlightsPage />} />
+        <Route path="/admin/airports" element={<AdminAirportsPage />} />
       </Routes>
     </BrowserRouter>
   );
