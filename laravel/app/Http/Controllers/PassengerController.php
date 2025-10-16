@@ -48,7 +48,7 @@ class PassengerController extends Controller
             'last_name'       => ['required','string','max:100'],
             'date_of_birth'   => ['nullable','date'],
             'passport_number' => ['nullable','string','max:32'],
-            'seat'            => ['nullable','string','max:10'], // koristi 'seat_number' ako si rename uradila
+            'seat_number'            => ['nullable','string','max:10'],  
             'price'           => ['required','numeric','min:0'],
         ]);
 
@@ -87,7 +87,7 @@ class PassengerController extends Controller
             'last_name'       => ['sometimes','string','max:100'],
             'date_of_birth'   => ['nullable','date'],
             'passport_number' => ['nullable','string','max:32'],
-            'seat'            => ['nullable','string','max:10'], // ili seat_number
+            'seat_number'            => ['nullable','string','max:10'],   
             'price'           => ['sometimes','numeric','min:0'],
         ]);
 
