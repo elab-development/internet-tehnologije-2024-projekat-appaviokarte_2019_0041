@@ -8,7 +8,7 @@ use App\Models\Passenger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Support\Str;
 class BookingController extends Controller
 {
     // GET /api/bookings (customer: samo svoje, admin: sve)
@@ -66,7 +66,7 @@ class BookingController extends Controller
             $booking = Booking::create([
                 'user_id'      => $user->id,
                 'flight_id'    => $flight->id,
-                'booking_code' => 'PNR' . strtoupper(str()->random(6)),
+               'booking_code' => 'PNR' . Str::upper(Str::random(6)),
                 'status'       => 'confirmed',
                 'total_price'  => $total,
                 'booked_at'    => now(),
@@ -79,7 +79,7 @@ class BookingController extends Controller
                     'last_name'       => $p['last_name'],
                     'date_of_birth'   => $p['date_of_birth'] ?? null,
                     'passport_number' => $p['passport_number'] ?? null,
-                    'seat'            => $p['seat'] ?? null, // promeni u seat_number ako si rename uradila
+                    'seat_number'            => $p['seat'] ?? null,  
                     'price'           => $p['price'],
                 ]);
             }

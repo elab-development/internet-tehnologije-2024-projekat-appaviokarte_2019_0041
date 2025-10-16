@@ -24,10 +24,7 @@ Route::prefix('admin')->group(function () {
         Route::delete('/flights/{flight}', [FlightController::class, 'destroy']);
 
 
-         Route::apiResource('bookings', BookingController::class);
-
-        // akcija mimo REST-a
-        Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
+       
 });
 
 
@@ -40,6 +37,10 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+      Route::apiResource('bookings', BookingController::class);
+
+        // akcija mimo REST-a
+        Route::post('/bookings/{booking}/cancel', [BookingController::class, 'cancel']);
     // nested listing/kreiranje (vezano za konkretan booking)
     Route::apiResource('bookings.passengers', PassengerController::class)
         ->only(['index','store'])

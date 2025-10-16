@@ -3,11 +3,9 @@ import api from "../api/axios";
 import "./flights.css";
 
 function toISODate(d = new Date()) {
-  // yyyy-mm-dd
   const pad = (n) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
-
 function fmtTime(ts) {
   const d = new Date(ts);
   const hh = String(d.getHours()).padStart(2, "0");
@@ -37,6 +35,14 @@ export default function FlightsPage() {
   const [data, setData] = useState(null); // Laravel paginator payload
   const [page, setPage] = useState(1);
 
+  // rezervacija modal
+  const [open, setOpen] = useState(false);
+  const [flightSel, setFlightSel] = useState(null);
+  const [pax, setPax] = useState([]);
+  const [bookLoading, setBookLoading] = useState(false);
+  const [bookErr, setBookErr] = useState("");
+  const [bookOk, setBookOk] = useState(null); // payload sa bookingom
+
   const params = useMemo(() => {
     const p = new URLSearchParams();
     if (origin) p.set("origin", origin.trim().toUpperCase());
@@ -62,50 +68,103 @@ export default function FlightsPage() {
   useEffect(() => {
     fetchFlights();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params]); // refetch kad se promene filteri ili strana
+  }, [params]);
 
   function onSubmit(e) {
     e.preventDefault();
-    setPage(1); // resetuj paginaciju kad se pretraži ručno
+    setPage(1);
     fetchFlights();
+  }
+
+  function openBookingModal(flight) {
+    setFlightSel(flight);
+    // default jedan putnik sa osnovnom cenom
+    const base = Number(flight.base_price) || 0;
+    setPax([{ first_name: "", last_name: "", date_of_birth: "", passport_number: "", seat: "", price: base }]);
+    setBookErr("");
+    setBookOk(null);
+    setOpen(true);
+  }
+  function closeBookingModal() {
+    setOpen(false);
+    setFlightSel(null);
+    setPax([]);
+    setBookErr("");
+    setBookOk(null);
+  }
+
+  function setPaxField(idx, field, value) {
+    setPax((prev) => prev.map((p, i) => (i === idx ? { ...p, [field]: value } : p)));
+  }
+  function addPassenger() {
+    const base = Number(flightSel?.base_price) || 0;
+    setPax((prev) => [...prev, { first_name: "", last_name: "", date_of_birth: "", passport_number: "", seat: "", price: base }]);
+  }
+  function removePassenger(idx) {
+    setPax((prev) => prev.filter((_, i) => i !== idx));
+  }
+
+  async function submitBooking(e) {
+    e?.preventDefault?.();
+    if (!flightSel) return;
+
+    // jednostavna provera
+    for (const p of pax) {
+      if (!p.first_name?.trim() || !p.last_name?.trim()) {
+        setBookErr("Unesite ime i prezime za sve putnike.");
+        return;
+      }
+      if (Number(p.price) < 0) {
+        setBookErr("Cena ne može biti negativna.");
+        return;
+      }
+    }
+
+    setBookLoading(true);
+    setBookErr("");
+    try {
+      const payload = {
+        flight_id: flightSel.id,
+        passengers: pax.map((p) => ({
+          first_name: p.first_name.trim(),
+          last_name: p.last_name.trim(),
+          date_of_birth: p.date_of_birth || null,
+          passport_number: p.passport_number || null,
+          seat: p.seat || null,
+          price: Number(p.price) || 0,
+        })),
+      };
+      const res = await api.post("/api/bookings", payload);
+      setBookOk(res.data);
+      // osveži listu (smanji seats_available)
+      fetchFlights();
+    } catch (e) {
+      setBookErr(e?.response?.data?.message || "Rezervacija nije uspela.");
+    } finally {
+      setBookLoading(false);
+    }
   }
 
   return (
     <div className="flights-page">
-      {/* Ambience (light glow kao na loginu) */}
       <div className="av-bg-lite" aria-hidden="true" />
 
       <div className="flights-container">
         <h1 className="flights-title">Pretraga letova</h1>
         <p className="flights-sub">Pronađi najbolje opcije za svoj sledeći let.</p>
 
-        {/* Search form */}
         <form className="flights-form" onSubmit={onSubmit}>
           <label>
             <span>Origin</span>
-            <input
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-              placeholder="BEG"
-              maxLength={8}
-            />
+            <input value={origin} onChange={(e) => setOrigin(e.target.value)} placeholder="BEG" maxLength={8} />
           </label>
           <label>
             <span>Destination</span>
-            <input
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              placeholder="CDG"
-              maxLength={8}
-            />
+            <input value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="CDG" maxLength={8} />
           </label>
           <label>
             <span>Datum</span>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-            />
+            <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </label>
 
           <button className="av-btn" type="submit" disabled={loading}>
@@ -113,16 +172,12 @@ export default function FlightsPage() {
           </button>
         </form>
 
-        {/* Error */}
         {err && <div className="error" role="alert">{err}</div>}
 
-        {/* Results */}
         <div className="flights-grid">
           {loading && !data && <div className="loading">Učitavam letove…</div>}
 
-          {data?.data?.length === 0 && !loading && (
-            <div className="empty">Nema rezultata za zadate filtere.</div>
-          )}
+          {data?.data?.length === 0 && !loading && <div className="empty">Nema rezultata za zadate filtere.</div>}
 
           {data?.data?.map((f) => {
             const minutes = diffMinutes(f.departure_at, f.arrival_at);
@@ -167,37 +222,123 @@ export default function FlightsPage() {
                 </div>
 
                 <div className="flight-actions">
-                  <button className="av-btn ghost">Detalji</button>
-                  <button className="av-btn">Rezerviši</button>
+                  {/* Detalji uklonjen */}
+                  <button className="av-btn" onClick={() => openBookingModal(f)}>
+                    Rezerviši
+                  </button>
                 </div>
               </article>
             );
           })}
         </div>
 
-        {/* Pagination */}
         {data?.last_page > 1 && (
           <div className="pager">
-            <button
-              className="pill"
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
+            <button className="pill" disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
               ← Prethodna
             </button>
-            <span className="page-info">
-              Strana {data.current_page} / {data.last_page}
-            </span>
-            <button
-              className="pill"
-              disabled={page >= data.last_page}
-              onClick={() => setPage((p) => Math.min(data.last_page, p + 1))}
-            >
+            <span className="page-info">Strana {data.current_page} / {data.last_page}</span>
+            <button className="pill" disabled={page >= data.last_page} onClick={() => setPage((p) => Math.min(data.last_page, p + 1))}>
               Sledeća →
             </button>
           </div>
         )}
       </div>
+
+      {/* MODAL */}
+      {open && flightSel && (
+        <div className="modal-backdrop" onClick={closeBookingModal}>
+          <div className="modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Rezervacija</h3>
+              <button className="ghost close" onClick={closeBookingModal} aria-label="Zatvori">✕</button>
+            </div>
+
+            <div className="modal-flight">
+              <div className="code">{flightSel.code}</div>
+              <div className="route">
+                {flightSel.origin?.code} {fmtTime(flightSel.departure_at)} → {flightSel.destination?.code} {fmtTime(flightSel.arrival_at)}
+              </div>
+              <div className="sub">{fmtDate(flightSel.departure_at)} · {fmtDuration(diffMinutes(flightSel.departure_at, flightSel.arrival_at))}</div>
+            </div>
+
+            {bookOk ? (
+              <div className="booking-success">
+                <h4>Uspešno rezervisano 🎉</h4>
+                <p>Šifra rezervacije: <b>{bookOk.booking_code || bookOk.id}</b></p>
+                <p>Ukupno: <b>{(Number(bookOk.total_price) || 0).toFixed(2)} €</b></p>
+                <div className="flight-actions">
+                  <button className="av-btn" onClick={closeBookingModal}>Zatvori</button>
+                </div>
+              </div>
+            ) : (
+              <form className="pax-form" onSubmit={submitBooking}>
+                {pax.map((p, i) => (
+                  <div className="pax-card" key={i}>
+                    <div className="pax-row">
+                      <label>
+                        <span>Ime</span>
+                        <input value={p.first_name} onChange={(e)=>setPaxField(i,"first_name",e.target.value)} required />
+                      </label>
+                      <label>
+                        <span>Prezime</span>
+                        <input value={p.last_name} onChange={(e)=>setPaxField(i,"last_name",e.target.value)} required />
+                      </label>
+                    </div>
+
+                    <div className="pax-row">
+                      <label>
+                        <span>Datum rođenja</span>
+                        <input type="date" value={p.date_of_birth} onChange={(e)=>setPaxField(i,"date_of_birth",e.target.value)} />
+                      </label>
+                      <label>
+                        <span>Broj pasoša</span>
+                        <input value={p.passport_number} onChange={(e)=>setPaxField(i,"passport_number",e.target.value)} />
+                      </label>
+                    </div>
+
+                    <div className="pax-row">
+                      <label>
+                        <span>Sedište</span>
+                        <input value={p.seat} onChange={(e)=>setPaxField(i,"seat",e.target.value)} placeholder="npr. 12A" />
+                      </label>
+                      <label>
+                        <span>Cena</span>
+                        <input type="number" min="0" step="0.01" value={p.price} onChange={(e)=>setPaxField(i,"price",e.target.value)} />
+                      </label>
+                    </div>
+
+                    {pax.length > 1 && (
+                      <div className="pax-actions">
+                        <button type="button" className="pill danger" onClick={()=>removePassenger(i)}>Ukloni putnika</button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                <div className="pax-toolbar">
+                  <button type="button" className="pill" onClick={addPassenger}>+ Dodaj putnika</button>
+                  <div className="total">
+                    Ukupno:{" "}
+                    <b>
+                      {pax.reduce((sum, p) => sum + (Number(p.price) || 0), 0).toFixed(2)} €
+                    </b>
+                  </div>
+                </div>
+
+                {bookErr && <div className="error" role="alert">{bookErr}</div>}
+
+                <div className="flight-actions">
+                  <button type="button" className="av-btn ghost" onClick={closeBookingModal}>Otkaži</button>
+                  <button type="submit" className="av-btn" disabled={bookLoading}>
+                    {bookLoading ? "Rezervišem…" : "Potvrdi rezervaciju"}
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

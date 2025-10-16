@@ -90,3 +90,67 @@
   margin:16px 0 24px;
 }
 .pager .page-info{ color:var(--muted); }
+/* ===== Modal ===== */
+.modal-backdrop{
+  position:fixed; inset:0; z-index:100;
+  background:rgba(2,6,23,.55);
+  backdrop-filter: blur(4px);
+  display:grid; place-items:center; padding:16px;
+}
+.modal{
+  width:min(760px, 100%);
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+.modal-header{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+}
+.modal-header h3{ margin:0; }
+.modal-header .close{
+  padding:8px 10px; border-radius:10px; border:1px solid var(--border);
+  background:var(--glass); color:var(--text); cursor:pointer;
+}
+
+.modal-flight{
+  display:flex; gap:10px; align-items:baseline; flex-wrap:wrap;
+  padding:10px; border-radius:12px; background:rgba(255,255,255,.04);
+  border:1px solid var(--border); margin-bottom:12px;
+}
+.modal-flight .code{ font-weight:800; }
+.modal-flight .route{ font-weight:600; }
+.modal-flight .sub{ color:var(--muted); }
+
+.pax-form{ display:grid; gap:12px; }
+.pax-card{
+  background:rgba(255,255,255,.03); border:1px solid var(--border);
+  border-radius:12px; padding:12px;
+}
+.pax-row{
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:8px;
+}
+@media (max-width:640px){ .pax-row{ grid-template-columns:1fr; } }
+.pax-card label{ display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--muted); }
+.pax-card input{
+  padding:12px 14px; border-radius:12px; border:1px solid var(--border);
+  background:rgba(12,16,40,.6); color:var(--text);
+}
+.pax-card input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(103,232,249,.15); }
+
+.pax-actions{ display:flex; justify-content:flex-end; }
+.pill.danger{
+  border:1px solid rgba(239,68,68,.45);
+  background:rgba(239,68,68,.1);
+  color:#fecaca;
+}
+
+.pax-toolbar{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.total{ color:var(--muted); }
+.booking-success{ text-align:center; padding:12px 8px; }
+.booking-success h4{ margin:.2rem 0 .6rem; }
+
+.modal .flight-actions{ margin-top:8px; display:flex; gap:10px; }
