@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./components/Navbar";
 import FlightsPage from "./pages/FlightsPage";
+import MyBookingsPage from "./pages/MyBookingsPage";
 
  
 
@@ -30,9 +31,8 @@ export default function App() {
       <Navbar user={user} setUser={setUser} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/letovi" element={<FlightsPage />} />
-        <Route path="/bookings" element={<div style={{padding:24}}>Moje rezervacije (WIP)</div>} />
-
+        <Route path="/letovi" element={<FlightsPage />} /> 
+          <Route path="/bookings" element={<MyBookingsPage />} />
         <Route path="/login" element={<LoginPage onLogin={(u)=>setUser(u)} />} />
         <Route path="/register" element={<RegisterPage onLogin={(u)=>setUser(u)} />} />
 
