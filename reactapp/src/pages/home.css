@@ -190,3 +190,40 @@ body{margin:0;background:linear-gradient(120deg,var(--bg1),var(--bg2));color:var
 
 /* ACCESSIBILITY */
 .av-card:focus{outline:3px solid var(--accent)}
+.av-plane-wrap {
+  position: relative;
+  width: clamp(420px, 38vw, 620px);
+  margin: 24px 0 0;
+}
+
+.av-plane {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.av-contrails rect {
+  fill: rgba(255,255,255,0.2);
+  opacity: 0.7;
+  animation: contrail-move 4s linear infinite;
+}
+@keyframes contrail-move {
+  0%   { transform: translateX(0);   opacity: 0.85; }
+  100% { transform: translateX(-30px); opacity: 0.35; }
+}
+
+.av-airframe .wing,
+.av-airframe .tail,
+.av-airframe .engine {
+  fill: #e2e8ff;
+}
+
+.av-airframe .cockpit,
+.av-airframe .window {
+  fill: #0b1535; /* tamno staklo */
+  opacity: 0.9;
+}
+
+.av-airframe .window {
+  opacity: 0.85;
+}

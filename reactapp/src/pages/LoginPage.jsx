@@ -19,8 +19,8 @@ export default function LoginPage({ onLogin }) {
       const { token, user } = res.data;
       localStorage.setItem("auth_token", token);
       localStorage.setItem("auth_user", JSON.stringify(user));
-      onLogin?.(user, token);         // <<< osveži App state
-      navigate("/letovi", { replace: true }); // <<< redirect posle logina
+      onLogin?.(user, token);        
+      navigate("/letovi", { replace: true }); 
     } catch (e) {
       setErr(e?.response?.data?.message || "Prijava nije uspela.");
     } finally { setLoading(false); }

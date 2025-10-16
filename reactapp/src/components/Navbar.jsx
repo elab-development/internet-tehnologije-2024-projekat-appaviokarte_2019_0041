@@ -1,11 +1,13 @@
+ 
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import { logout as logoutApi } from "../api/auth";
 import "../pages/login.css";
 
 export default function Navbar({ user, setUser }) {
   const navigate = useNavigate();
+  const isAdmin = user?.role === "admin";
 
   async function handleLogout() {
     try { await logoutApi(); } catch {}
@@ -13,7 +15,7 @@ export default function Navbar({ user, setUser }) {
       localStorage.removeItem("auth_token");
       localStorage.removeItem("auth_user");
       delete api.defaults.headers.common.Authorization;
-      setUser?.(null);                // <<< osveži navbar odmah
+      setUser?.(null);
       navigate("/login", { replace: true });
     }
   }
@@ -28,16 +30,31 @@ export default function Navbar({ user, setUser }) {
       </div>
 
       <nav className="links">
-        <Link to="/">Home</Link>
-        <Link to="/letovi">Flights</Link>
-        <Link to="/bookings">My bookings</Link>
+        <NavLink to="/" end>Home</NavLink>
+        <NavLink to="/letovi">Flights</NavLink>
+
+        {/* samo za ulogovane korisnike */}
+        {user && <NavLink to="/bookings">My bookings</NavLink>}
+
+        {/* admin linkovi */}
+        {isAdmin && (
+          <>
+            <span className="divider" aria-hidden="true" />
+            <NavLink to="/admin" end>Admin</NavLink>
+            <NavLink to="/admin/flights">Flights (Admin)</NavLink>
+            <NavLink to="/admin/airports">Airports</NavLink>
+            <NavLink to="/admin/passengers">Passengers</NavLink>
+          </>
+        )}
       </nav>
 
       <div className="session">
         {user ? (
           <>
             <span className="who">{user.name || user.email}</span>
-            <button className="av-btn ghost sm" onClick={handleLogout}>Logout</button>
+            <button className="av-btn ghost sm" onClick={handleLogout}>
+              Logout
+            </button>
           </>
         ) : (
           <>

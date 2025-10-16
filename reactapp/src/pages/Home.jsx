@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import "./home.css";
+import { useNavigate } from "react-router-dom";  
+import "./home.css"; 
 
 export default function Home() {
+  const navigate = useNavigate();  
   const [form, setForm] = useState({
     origin: "",
     destination: "",
@@ -16,8 +18,18 @@ export default function Home() {
 
   const onSearch = (e) => {
     e.preventDefault();
-    // TODO: pozovi backend: GET /api/flights/search?origin=...&destination=...&date=...
-    console.log("SEARCH:", form);
+
+    // minimalna validacija + normalizacija
+    const origin = form.origin.trim().toUpperCase();
+    const destination = form.destination.trim().toUpperCase();
+    const date = form.date; // yyyy-mm-dd
+    const pax = Math.max(1, Number(form.pax) || 1);
+
+    if (!origin || !destination || !date) return;
+
+    // formiraj query i preusmeri na stranicu sa rezultatima
+    const qs = new URLSearchParams({ origin, destination, date, pax: String(pax) });
+    navigate(`/flights?${qs.toString()}`); // ako ti je ruta /letovi, promeni ovde
   };
 
   return (
@@ -28,8 +40,6 @@ export default function Home() {
       <div className="av-cloud c1" aria-hidden />
       <div className="av-cloud c2" aria-hidden />
       <div className="av-cloud c3" aria-hidden />
-
- 
 
       <main className="av-main">
         <section className="av-hero">
@@ -93,22 +103,13 @@ export default function Home() {
             </button>
           </form>
 
-          <AirplaneIllustration />
         </section>
 
+        {/* … ostalo ostaje isto … */}
         <section id="why" className="av-grid">
-          <Feature
-            title="Pametna pretraga"
-            text="Filtriraj po ceni, trajanju, broju presedanja i avio-kompaniji."
-          />
-          <Feature
-            title="Fleks datumi"
-            text="Pogledaj najpovoljnije dane u nedelji — uštedi vreme i novac."
-          />
-          <Feature
-            title="Bez skrivenih troškova"
-            text="Transparentno od prve do poslednje stavke."
-          />
+          <Feature title="Pametna pretraga" text="Filtriraj po ceni, trajanju, broju presedanja i avio-kompaniji." />
+          <Feature title="Fleks datumi" text="Pogledaj najpovoljnije dane u nedelji — uštedi vreme i novac." />
+          <Feature title="Bez skrivenih troškova" text="Transparentno od prve do poslednje stavke." />
         </section>
 
         <section id="dest" className="av-cards">
@@ -122,34 +123,38 @@ export default function Home() {
           <h2>Spreman/na za poletanje?</h2>
           <p>Prijavi se i započni rezervaciju u par sekundi.</p>
           <div className="cta-actions">
-            <button className="av-btn">Kreiraj nalog</button>
-            <button className="av-btn ghost">Uloguj se</button>
+            <button className="av-btn" onClick={() => navigate("/register")}>Kreiraj nalog</button>
+            <button className="av-btn ghost" onClick={() => navigate("/login")}>Uloguj se</button>
           </div>
         </section>
       </main>
 
-      <footer className="av-foot">
-        © {new Date().getFullYear()} Skypath — Leti pametno.
-      </footer>
+  
     </div>
   );
 }
 
 /* ———— DODATNE KOMPONENTE ———— */
-
-function Feature({ title, text }) {
-  return (
-    <div className="av-feature">
-      <div className="spark" aria-hidden />
-      <h3>{title}</h3>
-      <p>{text}</p>
-    </div>
-  );
-}
+function Feature({ title, text }) { /* ...bez izmene... */ return (
+  <div className="av-feature">
+    <div className="spark" aria-hidden />
+    <h3>{title}</h3>
+    <p>{text}</p>
+  </div>
+);}
 
 function Card({ city, code, img }) {
   return (
-    <article className="av-card" role="button" tabIndex={0}>
+    <article
+      className="av-card"
+      role="button"
+      tabIndex={0}
+      onClick={() => {
+        // klik na karticu može odmah da prebaci na rezultate za taj city/code (po želji)
+        const qs = new URLSearchParams({ destination: code });
+        window.location.href = `/flights?${qs.toString()}`;
+      }}
+    >
       <img src={img} alt={`${city} (${code})`} loading="lazy" />
       <div className="av-card-info">
         <h4>{city}</h4>
@@ -159,23 +164,4 @@ function Card({ city, code, img }) {
   );
 }
 
-function AirplaneIllustration() {
-  return (
-    <div className="av-plane-wrap" aria-hidden>
-      <svg className="av-plane" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-        <g className="body">
-          <path d="M10,45 L120,40 C150,38 170,42 185,45 C190,46 192,50 190,52 C170,65 130,70 95,66 L10,60 Z" />
-        </g>
-        <g className="wing">
-          <path d="M60,40 L105,20 L115,22 L80,42 Z" />
-        </g>
-        <g className="tail">
-          <path d="M25,47 L20,30 L30,33 L35,48 Z" />
-        </g>
-        <circle className="window" cx="85" cy="49" r="2.2" />
-        <circle className="window" cx="95" cy="49" r="2.2" />
-        <circle className="window" cx="105" cy="49" r="2.2" />
-      </svg>
-    </div>
-  );
-}
+ 
