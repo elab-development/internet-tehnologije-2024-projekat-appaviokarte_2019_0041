@@ -7,6 +7,7 @@ import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./components/Navbar";
 import FlightsPage from "./pages/FlightsPage";
 import MyBookingsPage from "./pages/MyBookingsPage";
+import AdminFlightsPage from "./pages/AdminFlightsPage";
 
  
 
@@ -37,6 +38,11 @@ export default function App() {
         <Route path="/register" element={<RegisterPage onLogin={(u)=>setUser(u)} />} />
 
         <Route path="*" element={<Navigate to="/login" replace />} />
+
+
+
+
+        <Route path="/admin/flights" element={<AdminFlightsPage />} />
       </Routes>
     </BrowserRouter>
   );

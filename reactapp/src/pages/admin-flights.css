@@ -1,0 +1,136 @@
+.admin-flights-page{
+  position:relative; min-height:100dvh;
+  background:linear-gradient(120deg,var(--bg1),var(--bg2));
+  color:var(--text);
+}
+.av-bg-lite{
+  position:absolute; inset:-10%;
+  background:
+    radial-gradient(60% 60% at 20% 30%, rgba(96,165,250,0.28), transparent 60%),
+    radial-gradient(40% 40% at 70% 70%, rgba(103,232,249,0.20), transparent 60%);
+  filter: blur(42px); z-index:-1;
+}
+
+.af-container{ max-width:1200px; margin:0 auto; padding:24px; }
+.af-header{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
+.af-title{ margin:.2rem 0 .4rem; font-size:clamp(26px,4vw,40px); }
+.af-sub{ color:var(--muted); margin:0; }
+.af-actions{ display:flex; gap:8px; }
+
+.af-filters{
+  margin:16px 0; display:grid; grid-template-columns: repeat(4, 1fr) auto; gap:10px;
+  background:var(--card); border:1px solid var(--border); border-radius:16px; padding:12px; box-shadow:var(--shadow);
+}
+@media (max-width:900px){ .af-filters{ grid-template-columns: 1fr 1fr; } }
+
+.field{ display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--muted); }
+.field input, .airport-select input{
+  padding:12px 14px; border-radius:12px; border:1px solid var(--border);
+  background:rgba(12,16,40,.6); color:var(--text); outline:none;
+}
+.field input:focus, .airport-select input:focus{
+  border-color:var(--accent); box-shadow:0 0 0 3px rgba(103,232,249,.15);
+}
+.filter-actions{ display:flex; gap:8px; align-items:end; }
+
+/* Tabela */
+.table-wrap{
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; box-shadow:var(--shadow); overflow:auto;
+}
+.af-table{ width:100%; border-collapse:collapse; min-width:920px; }
+.af-table thead th{
+  text-align:left; padding:12px; font-size:13px; color:var(--muted);
+  position:sticky; top:0; background:rgba(15,23,42,.6); backdrop-filter: blur(6px);
+}
+.af-table tbody td{ padding:12px; border-top:1px solid var(--border); vertical-align:middle; }
+.af-table .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.cell-apt{ display:flex; flex-direction:column; }
+.cell-apt .muted{ color:var(--muted); font-size:12px; }
+.af-table .actions{ display:flex; gap:8px; }
+
+.pill{
+  padding:8px 12px; border-radius:999px; border:1px solid var(--border);
+  background:var(--glass); color:var(--text); cursor:pointer;
+}
+.pill:hover{ transform: translateY(-1px); }
+.pill.danger{
+  border:1px solid rgba(239,68,68,.45); background:rgba(239,68,68,.1); color:#fecaca;
+}
+
+.loading, .empty, .error{ text-align:center; }
+.error{
+  background: rgba(239,68,68,.12);
+  border:1px solid rgba(239,68,68,.35);
+  color:#fecaca; padding:10px 12px; border-radius:12px; margin:10px 0;
+}
+.pager{
+  display:flex; gap:12px; align-items:center; justify-content:center;
+  margin:16px 0 24px;
+}
+.pager .page-info{ color:var(--muted); }
+
+/* Modal (isti stil kao ranije) */
+.modal-backdrop{
+  position:fixed; inset:0; z-index:100;
+  background:rgba(2,6,23,.55);
+  backdrop-filter: blur(4px);
+  display:grid; place-items:center; padding:16px;
+}
+.modal{
+  width:min(780px, 100%);
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+.modal-header{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+}
+.modal-header .close{
+  padding:8px 10px; border-radius:10px; border:1px solid var(--border);
+  background:var(--glass); color:var(--text); cursor:pointer;
+}
+.modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:10px; }
+.av-btn.danger{
+  background:transparent; color:#fecaca; border:1px solid rgba(239,68,68,.45);
+}
+
+/* Form grid */
+.af-form{ display:grid; gap:12px; }
+.grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.grid3{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+@media (max-width:800px){
+  .grid2, .grid3{ grid-template-columns:1fr; }
+}
+
+/* Airport select dropdown */
+.airport-select{ position:relative; }
+.as-loading{
+  position:absolute; right:10px; top:50%; transform:translateY(-50%);
+  font-size:12px; color:var(--muted);
+}
+.as-list{
+  position:absolute; z-index:10; left:0; right:0; top:calc(100% + 6px);
+  background:#0f1a40; border:1px solid var(--border); border-radius:12px; overflow:auto; max-height:280px;
+  box-shadow:var(--shadow);
+}
+.as-item{
+  display:block; width:100%; text-align:left; padding:10px 12px; background:transparent; color:var(--text); border:0; cursor:pointer;
+}
+.as-item:hover{ background:rgba(255,255,255,.05); }
+.as-line{ display:flex; gap:8px; align-items:center; }
+.as-line .code{ font-family: ui-monospace, monospace; }
+.as-sub{ color:var(--muted); font-size:12px; }
+
+/* Buttons (from your theme) */
+.av-btn{
+  appearance:none; border:none; cursor:pointer;
+  padding:12px 16px; border-radius:12px; font-weight:700;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  color:#071023; box-shadow:0 12px 24px rgba(96,165,250,.25);
+  transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.av-btn:hover{ transform:translateY(-1px); box-shadow:0 16px 32px rgba(96,165,250,.35); }
+.av-btn.ghost{ background:transparent; color:var(--text); border:1px solid var(--border); }
