@@ -1,38 +1,39 @@
-.App {
-  text-align: center;
+/* ===== Top Navbar (koristi postojece varijable) ===== */
+.av-topnav{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding:12px 20px;
+  background: color-mix(in oklab, var(--bg1) 60%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom:1px solid var(--border);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.av-topnav .brand-link{
+  display:flex; align-items:center; gap:.6rem;
+  color:var(--text); text-decoration:none; font-weight:700; letter-spacing:.4px;
+}
+.av-topnav .logo{
+  display:inline-grid; place-items:center; width:32px; height:32px; border-radius:8px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#0b1120; font-weight:900;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.av-topnav .links{ display:flex; gap:14px; }
+.av-topnav .links a{
+  color:var(--muted); text-decoration:none; font-weight:500; padding:6px 8px; border-radius:8px;
 }
+.av-topnav .links a:hover{ color:var(--text); background:var(--glass); border:1px solid var(--border); }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
+.av-topnav .session{ display:flex; align-items:center; gap:10px; }
+.av-topnav .session .who{ color:var(--muted); font-size:14px; }
 
-.App-link {
-  color: #61dafb;
+.pill{
+  padding:8px 14px; border-radius:999px;
+  border:1px solid var(--border); background:var(--glass);
+  color:var(--text); text-decoration:none; font-weight:600;
 }
+.pill:hover{ border-color:var(--accent); color:var(--text); }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.av-btn.sm{ padding:10px 12px; }
+
+/* (opciono) Container spacing da sadržaj ne ide ispod nav-a */
+main, .av-home, .av-login-main { scroll-margin-top: 64px; }

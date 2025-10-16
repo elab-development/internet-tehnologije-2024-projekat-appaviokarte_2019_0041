@@ -29,16 +29,7 @@ export default function Home() {
       <div className="av-cloud c2" aria-hidden />
       <div className="av-cloud c3" aria-hidden />
 
-      <header className="av-nav">
-        <div className="av-brand">
-          <span className="av-logo" aria-hidden>✈</span> Skypath
-        </div>
-        <nav className="av-links">
-          <a href="#dest">Destinacije</a>
-          <a href="#why">Zašto mi?</a>
-          <a href="#cta" className="pill">Rezerviši</a>
-        </nav>
-      </header>
+ 
 
       <main className="av-main">
         <section className="av-hero">
