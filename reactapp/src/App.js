@@ -11,6 +11,7 @@ import AdminFlightsPage from "./pages/AdminFlightsPage";
 import AdminAirportsPage from "./pages/AdminAirportsPage";
 import AdminPassengersPage from "./pages/AdminPassengersPage";
 import AdminHomePage from "./pages/AdminHomePage";
+import Footer from "./components/Footer";
 
  
 
@@ -47,6 +48,7 @@ export default function App() {
 
             <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
+      <Footer></Footer>
     </BrowserRouter>
   );
 }

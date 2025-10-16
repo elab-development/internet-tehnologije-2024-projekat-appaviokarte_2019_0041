@@ -1,0 +1,111 @@
+.av-footer {
+  margin-top: 48px;
+  padding: 28px 0 36px;
+  position: relative;
+  z-index: 1;
+}
+
+.av-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 60% at 70% 0%, rgba(117, 205, 255, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.av-footer-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 22px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(3, 10, 35, 0.45), inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  color: #e9eefc;
+}
+
+.av-footer .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: .3px;
+  margin-bottom: 14px;
+}
+.av-footer .brand .logo {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #86b6ff, #9ee7ff);
+  color: #0b1535;
+  box-shadow: 0 4px 12px rgba(134, 182, 255, .35);
+}
+
+.av-footer .cols {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 18px;
+  padding: 8px 0 14px;
+}
+@media (max-width: 760px) {
+  .av-footer .cols { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .av-footer .cols { grid-template-columns: 1fr; }
+}
+
+.av-footer .col h4 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #b8c6ff;
+  letter-spacing: .6px;
+  margin: 4px 0 10px;
+}
+
+.av-footer .col a,
+.av-footer .col span {
+  display: block;
+  font-size: 14px;
+  color: #e9eefc;
+  text-decoration: none;
+  padding: 6px 0;
+  opacity: .9;
+}
+.av-footer .col a:hover { opacity: 1; text-decoration: underline; }
+.av-footer .col .muted { color: #c8d2ffb3; }
+
+.av-footer .bottom {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 13px;
+  color: #dbe6ffcc;
+}
+
+.av-footer .social {
+  display: inline-flex;
+  gap: 10px;
+}
+.av-footer .social a {
+  display: inline-grid;
+  place-items: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  color: #e9eefc;
+  text-decoration: none;
+  transition: transform .15s ease, background .15s ease;
+}
+.av-footer .social a:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.16);
+}
