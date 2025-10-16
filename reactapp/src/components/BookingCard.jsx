@@ -1,3 +1,5 @@
+import React from "react";
+ 
  
 function fmtDateTime(ts) {
   const d = new Date(ts);
@@ -13,13 +15,15 @@ function fmtMoney(n) {
   const v = Number(n) || 0;
   return v.toFixed(2) + " €";
 } 
-export default function BookingCard({
+// ====== BookingCard (sa PDF dugmetom) ======
+export function BookingCard({
   b,
   confirmId,
   setConfirmId,
   onCancel,
   cancelLoading = false,
   cancelErr = "",
+  onPdf, // <<< DODATO
 }) {
   const f = b.flight || {};
   const mins = minutesUntil(f.departure_at);
@@ -80,7 +84,11 @@ export default function BookingCard({
             Otkaži
           </button>
         )}
-        {/* ako je canceled ili ≤24h, dugme se ne prikazuje */}
+
+        {/* PDF karta */}
+        <button className="av-btn" onClick={onPdf} style={{ marginLeft: 8 }}>
+          PDF karta
+        </button>
       </div>
 
       {confirmId === b.id && (
