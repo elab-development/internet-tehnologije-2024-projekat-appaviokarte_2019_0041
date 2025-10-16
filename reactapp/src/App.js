@@ -5,10 +5,9 @@ import Home from "./pages/Home";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./components/Navbar";
+import FlightsPage from "./pages/FlightsPage";
 
-function Flights() {
-  return <div style={{ padding: 24 }}>Letovi – lista letova (WIP)</div>;
-}
+ 
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -31,7 +30,7 @@ export default function App() {
       <Navbar user={user} setUser={setUser} />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/letovi" element={<Flights />} />
+        <Route path="/letovi" element={<FlightsPage />} />
         <Route path="/bookings" element={<div style={{padding:24}}>Moje rezervacije (WIP)</div>} />
 
         <Route path="/login" element={<LoginPage onLogin={(u)=>setUser(u)} />} />
